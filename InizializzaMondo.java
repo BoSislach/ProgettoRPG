@@ -27,7 +27,7 @@ public class InizializzaMondo {
         stradaRissa.collega("risveglio", retroTabacchino);
         retroTabacchino.collega("tunnel", sotterranei);
         retroTabacchino.collega("scappa", sotterranei);
-        sotterranei.collega("profondo", parcheggioSotterraneo);
+        sotterranei.collega("scendi in basso", parcheggioSotterraneo);
         parcheggioSotterraneo.collega("indietro", sotterranei);
         parcheggioSotterraneo.collega("scale", edificioAbbandonato);
         edificioAbbandonato.collega("giù", parcheggioSotterraneo);
