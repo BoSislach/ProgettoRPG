@@ -37,6 +37,10 @@ class Enemy {
         return scudo;
     }
 
+    public void setVita(int health) {
+        this.health = health;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

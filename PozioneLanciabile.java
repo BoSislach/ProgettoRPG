@@ -1,3 +1,3 @@
 public interface PozioneLanciabile {
-    void lanciaPozione(Enemy nemico);
+    void eseguiEffetto(Enemy nemico);
 }

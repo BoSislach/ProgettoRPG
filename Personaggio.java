@@ -45,7 +45,13 @@ public class Personaggio {
         this.modalitaDifesa = false;
         this.pozioneAttiva = false;
         this.turniPozione = 0;
-        this.incantesimiSbloccati.add(new PallaInfuocata(20, "Palla Infuocata", "Una palla di fuoco che brucia i peli del sedere del nemico"));
+
+        this.incantesimiSbloccati.add(new Incantesimo("palla infuocata", 20, "Una palla di fuoco che brucia i peli del sedere del nemico"));
+        this.incantesimiSbloccati.add(new Incantesimo("fulmine celeste", 25, "Un fulmine dal cielo che colpisce con la furia degli dei"));
+        this.incantesimiSbloccati.add(new Incantesimo("onda gelida", 18, "Un'onda di ghiaccio che congela il sangue nelle vene del nemico"));
+        this.incantesimiSbloccati.add(new Incantesimo("spirito dell'ombra", 30, "Uno spirito oscuro che divora l'anima del nemico"));
+        this.incantesimiSbloccati.add(new Incantesimo("raggio purificatore", 22, "Un raggio di luce che purifica e distrugge il male"));
+        this.incantesimiSbloccati.add(new Incantesimo("vortice di vento", 15, "Un vortice di vento che strappa la carne dal nemico"));
     }
 
     public boolean setVita(int vita) {
@@ -133,6 +139,14 @@ public class Personaggio {
         arma.diminuisciUsura();
 
         return dannoInflitto;
+    }
+
+    public Incantesimo getIncantesimoByIndex(int index) {
+        if (index >= 0 && index < incantesimiSbloccati.size()) {
+            return incantesimiSbloccati.get(index);
+        } else {
+            return null;
+        }
     }
 
     public void muori(Luogo luogoCorrente) {
@@ -284,6 +298,15 @@ public class Personaggio {
         nemico.setEsperienza(0);
         setEsperienza(this.esperienza+nemico.getEsperienza());
         aumentaLivello(getEsperienza());
+    }
+
+    public void usaIncantesimo(int indiceIncantesimo, Enemy nemico) {
+        if (indiceIncantesimo >= 0 && indiceIncantesimo < incantesimiSbloccati.size()) {
+            Incantesimo incantesimo = incantesimiSbloccati.get(indiceIncantesimo);
+            incantesimo.eseguiEffetto(nemico);
+        } else {
+            System.out.println("Indice dell'incantesimo non valido.");
+        }
     }
 
     private String aumentaLivello(int esperienza) {

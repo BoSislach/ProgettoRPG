@@ -119,12 +119,49 @@ public class Combattimento {
             return;
         }
 
-        if(personaggio.getHaSbloccatoIncantesimi()) {
+        Scanner scanner = new Scanner(System.in);
+
+        if (personaggio.getHaSbloccatoIncantesimi()) {
             System.out.println("Incantesimi disponibili:");
-            System.out.println(personaggi)
+            System.out.println(personaggio.mostraIncantesimiSbloccati());
+
+            System.out.print("Vuoi usare un incantesimo? (si/no): ");
+            String sceltaIncantesimo = scanner.nextLine().trim();
+
+            if (sceltaIncantesimo.equalsIgnoreCase("si")) {
+                System.out.print("Scegli l'indice dell'incantesimo da usare: ");
+                int indiceIncantesimo = scanner.nextInt();
+                scanner.nextLine();
+
+                Incantesimo incantesimo = personaggio.getIncantesimoByIndex(indiceIncantesimo);
+                if (incantesimo == null) {
+                    System.out.println("indice dell'incantesimo non valido, usa l'arma.");
+                } else {
+                    boolean usaIncantesimo = true;
+
+                    String nome = incantesimo.getNome();
+                    if (nome.equalsIgnoreCase("fulmine celeste") || nome.equalsIgnoreCase("onda gelida")) {
+                        System.out.println("questi incantesimi ti fanno perdere 10 punti salute ogni volta che li usi, sei sicuro di volerli usare? (si/no)");
+                        String conferma = scanner.nextLine().trim();
+
+                        if (conferma.equalsIgnoreCase("si")) {
+                            personaggio.setVita(personaggio.getVita() - 10);
+                        } else {
+                            System.out.println("Incantesimo annullato. Usa l'arma.");
+                            usaIncantesimo = false;
+                        }
+                    }
+
+                    if (usaIncantesimo) {
+                        personaggio.usaIncantesimo(indiceIncantesimo, nemico);
+                        return; // Salta l'attacco con arma se incantesimo usato
+                    }
+                }
+            }
+        } else {
+            System.out.println("Non hai ancora sbloccato incantesimi");
         }
 
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Scegli l'indice dell'arma da usare: ");
         int indiceScelto = scanner.nextInt();
 
