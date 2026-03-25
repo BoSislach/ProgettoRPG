@@ -3,12 +3,12 @@ import java.util.Scanner;
 
 public class Combattimento {
     private Personaggio personaggio;
-    private Enemy nemico;
+    private Personaggio nemico;
     private Luogo luogo;
     private Random random;
     private boolean combattimentoAttivo;
 
-    public Combattimento(Personaggio personaggio, Enemy nemico, Luogo luogo) {
+    public Combattimento(Personaggio personaggio, Personaggio nemico, Luogo luogo) {
         this.personaggio = personaggio;
         this.nemico = nemico;
         this.luogo = luogo;
@@ -17,7 +17,7 @@ public class Combattimento {
     }
 
     public void iniziaCombattimento() {
-        System.out.println("Inizia il combattimento tra " + personaggio.getNome() + " e " + nemico.getName() + "!");
+        System.out.println("Inizia il combattimento tra " + personaggio.getNome() + " e " + nemico.getNome() + "!");
 
         // Decide chi attacca per primo (50% probabilità)
         boolean personaggioPrimo = random.nextBoolean();
@@ -77,7 +77,7 @@ public class Combattimento {
     }
 
     private void turnoNemico() {
-        System.out.println("\nTurno di " + nemico.getName());
+        System.out.println("\nTurno di " + nemico.getNome());
 
         // Il nemico sceglie un'azione casuale
         String azione = simulaSceltaNemico();
@@ -92,7 +92,7 @@ public class Combattimento {
                 break;
             case "scappa":
                 if (random.nextInt(100) < 20) { // 20% probabilità di scappare
-                    System.out.println(nemico.getName() + " è scappato!");
+                    System.out.println(nemico.getNome() + " è scappato!");
                     combattimentoAttivo = false;
                 } else {
                     eseguiAttaccoNemico();
@@ -129,6 +129,7 @@ public class Combattimento {
             String sceltaIncantesimo = scanner.nextLine().trim();
 
             if (sceltaIncantesimo.equalsIgnoreCase("si")) {
+                System.out.println("Mana attuale: " + personaggio.getManaPersonaggio());
                 System.out.print("Scegli l'indice dell'incantesimo da usare: ");
                 int indiceIncantesimo = scanner.nextInt();
                 scanner.nextLine();
@@ -138,6 +139,13 @@ public class Combattimento {
                     System.out.println("indice dell'incantesimo non valido, usa l'arma.");
                 } else {
                     boolean usaIncantesimo = true;
+
+                    if(personaggio.getManaPersonaggio() < incantesimo.getManaCosto()) {
+                        System.out.println("Non hai abbastanza mana per usare questo incantesimo. Usa l'arma.");
+                        usaIncantesimo = false;
+                    } else {
+                        personaggio.setManaPersonaggio(personaggio.getManaPersonaggio() - incantesimo.getManaCosto());
+                    }
 
                     String nome = incantesimo.getNome();
                     if (nome.equalsIgnoreCase("fulmine celeste") || nome.equalsIgnoreCase("onda gelida")) {
@@ -186,15 +194,15 @@ public class Combattimento {
         System.out.println(personaggio.getNome() + " attacca con " + arma.getNome() +
                 " e infligge " + danno + " danni!");
 
-        if (nemico.isDefeated()) {
-            System.out.println(nemico.getName() + " è stato sconfitto!");
+        if (!nemico.isAlive()) {
+            System.out.println(nemico.getNome() + " è stato sconfitto!");
             combattimentoAttivo = false;
         }
     }
 
     private void eseguiAttaccoNemico() {
         int danno = nemico.attack();
-        System.out.println(nemico.getName() + " attacca e infligge " + danno + " danni!");
+        System.out.println(nemico.getNome() + " attacca e infligge " + danno + " danni!");
         personaggio.subisciDanno(danno);
 
         if (!personaggio.isAlive()) {
@@ -210,9 +218,9 @@ public class Combattimento {
             System.out.println(personaggio.getNome() + " è morto!");
             personaggio.muori(luogo);
             nemico.trasferisciEsperienza(personaggio);
-            System.out.println(nemico.getName() + " ottiene " + nemico.getEsperienza() + " esperienza!");
+            System.out.println(nemico.getNome() + " ottiene " + nemico.getEsperienza() + " esperienza!");
         } else if (!nemico.isAlive()) {
-            System.out.println(nemico.getName() + " è morto!");
+            System.out.println(nemico.getNome() + " è morto!");
             nemico.muori(luogo);
             personaggio.trasferisciEsperienza(nemico);
             System.out.println(personaggio.getNome() + " ottiene " + nemico.getEsperienza() + " esperienza!");

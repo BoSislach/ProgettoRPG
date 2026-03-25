@@ -3,7 +3,7 @@ public class OggettoApribile extends OggettoGenerico {
         private Item itemContenuto;
 
         public OggettoApribile(String nome, String descrizione, int peso,int usura,boolean richiedeChiave, boolean distruttibile) {
-            super(nome, descrizione,peso,usura,richiedeChiave,distruttibile);
+            super(nome, descrizione,peso,usura,richiedeChiave,distruttibile, 0);
             this.aperto = false; // non e aperto di default
         }
 

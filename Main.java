@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Mondo mondo = InizializzaMondo.InizializzaMondo();
-        Personaggio protagonista = new Personaggio("Zanca", "un negro di merda hahaha", 100, 50, 30, 20);
+        Personaggio protagonista = mondo.getProtagonista();
         System.out.println("via Roma - Guerra di Strada");
         System.out.println("personaggio principale: " + protagonista.getNome());
         System.out.println("\nPOSIZIONE INIZIALE: " + mondo.getPosizioneCorrente().getNome());
@@ -37,6 +37,26 @@ public class Main {
                 System.out.println("ti muovi verso: " + comandi);
             } else {
                 System.out.println("non puoi andare in quella direzione.");
+            }
+
+            // Controlla se ci sono nemici nel luogo
+            if (!luogoAttuale.getPersonaggi().isEmpty()) {
+                for (Personaggio p : luogoAttuale.getPersonaggi()) {
+                    if (p != protagonista) { // Assumendo che i nemici siano Personaggio, ma dovrebbero essere Enemy
+                        // Per ora, assumiamo che i nemici siano Personaggio con nome diverso
+                        if (!p.getNome().equals(protagonista.getNome())) {
+                            System.out.println("Incontri " + p.getNome() + "!");
+                            // Inizia combattimento
+                            Combattimento combattimento = new Combattimento(protagonista, p, luogoAttuale);
+                            combattimento.iniziaCombattimento();
+                            // Dopo combattimento, rimuovi se morto
+                            if (!p.isAlive()) {
+                                luogoAttuale.rimuoviPersonaggio(p);
+                            }
+                            break; // Solo uno per volta
+                        }
+                    }
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ public class InizializzaMondo {
     public static Mondo InizializzaMondo() {
 
         Personaggio protagonista = new Personaggio("Zanca", "Ragazzo finito nel posto sbagliato... o forse giusto", 100,50, 30, 20);
+        protagonista.setManaPersonaggio(50); // Aggiungi mana iniziale per testare
         Mondo mondo = new Mondo("Via Roma: Guerra di Strada", "Notte violenta nella via", protagonista);
         Luogo stazione = new Luogo("Stazione Ferroviaria","Ingresso di Udine, luci al neon che sbiadiscono. Da qui inizia tutto.");
         Luogo viaRoma = new Luogo("Via Roma", "La strada è viva… ma nel modo sbagliato. Motorini che sfrecciano, urla, "+ "gente che spaccia negli angoli. Qui comandano bande diverse.");
@@ -66,10 +67,10 @@ public class InizializzaMondo {
         Item mappaVia = new Item("Mappa della Via Intera","Trovata sul Rosso. Mostra tutti i passaggi segreti. Scritta sopra: 'IL CANE NON DEVE ARRIVARE IN FONDO ALLA VIA'",15, 0, true);
 
 
-        kebab.aggiungiOggetto(lattina);
-        retroTabacchino.aggiungiOggetto(zaino);
-        parcheggioSotterraneo.aggiungiOggetto(chiaveElettronica);
-        tetto.aggiungiOggetto(mappaVia);
+        kebab.aggiungiItem(lattina);
+        retroTabacchino.aggiungiItem(zaino);
+        parcheggioSotterraneo.aggiungiItem(chiaveElettronica);
+        tetto.aggiungiItem(mappaVia);
         parcheggioSotterraneo.aggiungiPersonaggio(ilMuro);
         tetto.aggiungiPersonaggio(ilRosso);
 

@@ -26,6 +26,7 @@ public class Personaggio {
     private int turniPozione;
     private ArrayList<Incantesimo> incantesimiSbloccati = new ArrayList<>();
     private boolean haSbloccatoIncantesimi = false;
+    private int mana;
 
     public Personaggio(String nome, String descrizione, int maxVita, int maxForza, int maxAttacco, int maxDifesa) {
         this.nome = nome;
@@ -45,13 +46,14 @@ public class Personaggio {
         this.modalitaDifesa = false;
         this.pozioneAttiva = false;
         this.turniPozione = 0;
+        this.mana =0;
 
-        this.incantesimiSbloccati.add(new Incantesimo("palla infuocata", 20, "Una palla di fuoco che brucia i peli del sedere del nemico"));
-        this.incantesimiSbloccati.add(new Incantesimo("fulmine celeste", 25, "Un fulmine dal cielo che colpisce con la furia degli dei"));
-        this.incantesimiSbloccati.add(new Incantesimo("onda gelida", 18, "Un'onda di ghiaccio che congela il sangue nelle vene del nemico"));
-        this.incantesimiSbloccati.add(new Incantesimo("spirito dell'ombra", 30, "Uno spirito oscuro che divora l'anima del nemico"));
-        this.incantesimiSbloccati.add(new Incantesimo("raggio purificatore", 22, "Un raggio di luce che purifica e distrugge il male"));
-        this.incantesimiSbloccati.add(new Incantesimo("vortice di vento", 15, "Un vortice di vento che strappa la carne dal nemico"));
+        this.incantesimiSbloccati.add(new Incantesimo("palla infuocata", 20, "Una palla di fuoco che brucia i peli del sedere del nemico", 10));
+        this.incantesimiSbloccati.add(new Incantesimo("fulmine celeste", 25, "Un fulmine dal cielo che colpisce con la furia degli dei", 15));
+        this.incantesimiSbloccati.add(new Incantesimo("onda gelida", 18, "Un'onda di ghiaccio che congela il sangue nelle vene del nemico", 12));
+        this.incantesimiSbloccati.add(new Incantesimo("spirito dell'ombra", 30, "Uno spirito oscuro che divora l'anima del nemico", 20));
+        this.incantesimiSbloccati.add(new Incantesimo("raggio purificatore", 22, "Un raggio di luce che purifica e distrugge il male", 18));
+        this.incantesimiSbloccati.add(new Incantesimo("vortice di vento", 15, "Un vortice di vento che strappa la carne dal nemico", 14));
     }
 
     public boolean setVita(int vita) {
@@ -69,6 +71,48 @@ public class Personaggio {
             s += incantesimo.getNome() + "\n";
         }
         return s;
+    }
+
+    public void raccogliOggetto(Luogo luogoCorrente, String nomeOggetto) {
+        if (luogoCorrente.getOggettiPresenti().contains(nomeOggetto)) {
+            for (Item oggetto : luogoCorrente.getOggetti()) {
+                if (oggetto.getNome().equals(nomeOggetto) && oggetto.isTrasportabile()) {
+                    if (aggiungiOggetto(oggetto)) {
+                        luogoCorrente.rimuoviItem(oggetto);
+                        System.out.println(nome + " ha raccolto " + oggetto.getNome());
+                    } else {
+                        System.out.println(nome + " non può raccogliere " + oggetto.getNome() + " perché la sacca è piena.");
+                    }
+                    return;
+                }
+            }
+        } else {
+            System.out.println(nomeOggetto + " non è presente in " + luogoCorrente.getNome());
+        }
+    }
+    public void controllaOggettoGenerico(Luogo luogoCorrente) {
+        System.out.println("Oggetti generici nel luogo:");
+        for (OggettoGenerico og : luogoCorrente.getOggettiGenerici()) {
+            System.out.println(og.getNome());
+        }
+    }
+
+    public void setManaPersonaggio(int mana) {
+        this.mana = mana;
+    }
+
+    public int getManaPersonaggio() {
+        return mana;
+    }
+
+    public void raccogliMana(Luogo luogoCorrente) {
+        for (OggettoGenerico oggetto : luogoCorrente.getOggettiGenerici()) {
+            if (oggetto.getManaPresente() > 0) {
+                mana += oggetto.getManaPresente();
+                System.out.println(nome + " ha raccolto " + oggetto.getManaPresente() + " mana da " + oggetto.getNome());
+                oggetto.setManaPresente(0); // Rimuove il mana dall'oggetto dopo averlo raccolto
+            }
+        }
     }
 
     public void subisciDanno(int danno) {
@@ -124,7 +168,7 @@ public class Personaggio {
         }
     }
 
-    public int attacca(Enemy nemico, Arma arma) {
+    public int attacca(Personaggio nemico, Arma arma) {
         Random random = new Random();
         int percentuale;
 
@@ -135,7 +179,7 @@ public class Personaggio {
         }
 
         int dannoInflitto = (arma.getDanno() * percentuale) / 100;
-        nemico.takeDamage(dannoInflitto);
+        nemico.subisciDanno(dannoInflitto);
         arma.diminuisciUsura();
 
         return dannoInflitto;
@@ -152,13 +196,13 @@ public class Personaggio {
     public void muori(Luogo luogoCorrente) {
         // Il personaggio muore e lascia cadere tutti i suoi oggetti nel luogo
         for (Trasportabile oggetto : sacca) {
-            luogoCorrente.aggiungiOggetto((Item) oggetto);
+            luogoCorrente.aggiungiItem((Item) oggetto);
         }
         sacca.clear();
 
         // se aveva uno scudo cade
         if (scudoPosseduto != null) {
-            luogoCorrente.aggiungiOggetto(scudoPosseduto);
+            luogoCorrente.aggiungiItem(scudoPosseduto);
             scudoPosseduto = null;
         }
 
@@ -280,9 +324,9 @@ public class Personaggio {
         return incantesimiSbloccati;
     }
 
-    public boolean scappa() {
+    public int attack() {
         Random random = new Random();
-        return random.nextBoolean(); 
+        return attacco + random.nextInt(10);
     }
 
     public boolean setEsperienza(int esperienza) {
@@ -294,13 +338,7 @@ public class Personaggio {
         }
     }
 
-    public void trasferisciEsperienza(Enemy nemico) {
-        nemico.setEsperienza(0);
-        setEsperienza(this.esperienza+nemico.getEsperienza());
-        aumentaLivello(getEsperienza());
-    }
-
-    public void usaIncantesimo(int indiceIncantesimo, Enemy nemico) {
+    public void usaIncantesimo(int indiceIncantesimo, Personaggio nemico) {
         if (indiceIncantesimo >= 0 && indiceIncantesimo < incantesimiSbloccati.size()) {
             Incantesimo incantesimo = incantesimiSbloccati.get(indiceIncantesimo);
             incantesimo.eseguiEffetto(nemico);
@@ -400,7 +438,18 @@ public class Personaggio {
         return difesa;
     }
 
+    public boolean scappa() {
+        Random random = new Random();
+        return random.nextBoolean(); 
+    }
+
     public int getEsperienza() {
         return esperienza;
     }
 }
+
+
+
+
+
+

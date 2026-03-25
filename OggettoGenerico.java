@@ -9,13 +9,15 @@ public class OggettoGenerico implements ApribileChiudibile, Distruttibile {
     private String nome;
     private ArrayList<Item> listaOggettiDepositati;
     final static int MaxOggettiDepositabili = 5;
+    private int manaPresente;
 
-    public OggettoGenerico(String nome, String descrizione, int peso, int usura, boolean richiedeChiave,boolean distruttibile) {
+    public OggettoGenerico(String nome, String descrizione, int peso, int usura, boolean richiedeChiave,boolean distruttibile,int manaPresente) {
         this.nome = nome;
         this.aperto = false;
         this.richiedeChiave = richiedeChiave;
         this.contenuto = new ArrayList<>();
         this.distruttibile = distruttibile;
+        this.manaPresente = manaPresente;
     }
 
     @Override
@@ -27,9 +29,21 @@ public class OggettoGenerico implements ApribileChiudibile, Distruttibile {
         return false; // richiede chiave
     }
 
+    public int getManaPresente() {
+        return manaPresente;
+    }
+
+    public void setManaPresente(int manaPresente) {
+        this.manaPresente = manaPresente;
+    }
+
     @Override
     public boolean isDistruttibile() {
         return distruttibile;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     @Override
@@ -73,9 +87,7 @@ public class OggettoGenerico implements ApribileChiudibile, Distruttibile {
 
     @Override
     public void aggiungiOggetto(Item oggetto) {
-        if (aperto) {
             contenuto.add(oggetto);
-        }
     }
 
     @Override

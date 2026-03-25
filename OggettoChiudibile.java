@@ -3,7 +3,7 @@ public class OggettoChiudibile extends OggettoGenerico{
     private Item itemContenuto; // L'oggetto che può essere contenuto all'interno dell'oggetto chiudibile
 
     public OggettoChiudibile(String nome, String descrizione, int peso, int usura, boolean richiedeChiave, boolean distruttibile) {
-        super(nome, descrizione,peso,usura, richiedeChiave,distruttibile);
+        super(nome, descrizione,peso,usura, richiedeChiave,distruttibile, 0);
         this.chiuso = true; // Di default, l'oggetto è chiuso
     }
 

@@ -1,7 +1,7 @@
 public class OggettoDistruttibili extends OggettoGenerico{
     private boolean distruttibile;
-    public OggettoDistruttibili(String nome, String descrizione, int peso, int usura, boolean richiedeChiave) {
-        super(nome, descrizione, peso, usura, richiedeChiave, true);
+    public OggettoDistruttibili(String nome, String descrizione, int peso, int usura, boolean richiedeChiave,int manaPresente) {
+        super(nome, descrizione, peso, usura, richiedeChiave, true, manaPresente);
         this.distruttibile = true;
     }
 

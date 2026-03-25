@@ -87,7 +87,7 @@ class Enemy {
 
     public void muori(Luogo luogoCorrente) {
         if (scudo != null) {
-            luogoCorrente.aggiungiOggetto(scudo);
+            luogoCorrente.aggiungiItem(scudo);
             scudo = null;
         }
         isAlive = false;
