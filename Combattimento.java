@@ -43,8 +43,6 @@ public class Combattimento {
         System.out.println("\nTurno di " + personaggio.getNome());
         System.out.println("Cosa vuoi fare? (attacca/difendi/pozione/scappa)");
 
-        // Qui dovresti implementare l'input dell'utente
-        // Per ora simulo una scelta casuale per testare
         String azione = simulaSceltaPersonaggio();
 
         switch (azione) {
